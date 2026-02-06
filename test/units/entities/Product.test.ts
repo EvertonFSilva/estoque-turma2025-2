@@ -1,4 +1,4 @@
-import Product from '../../src/entities/Product';
+import Product from '../../../src/entities/Product';
 
 describe('Entidade Product', () => {
   

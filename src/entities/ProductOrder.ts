@@ -6,11 +6,13 @@ export default class ProductOrder {
     private product: Product;
     private quantity: number;
     private orderDate: Date;
+    private status: string;
 
-    private constructor(uuid: string, product: Product, quantity: number, orderDate: Date) {
+    private constructor(uuid: string, product: Product, quantity: number, orderDate: Date, status: string) {
         this.uuid = uuid;
         this.product = product;
         this.quantity = quantity;
+        this.status = status;
         this.orderDate = orderDate;
     }
 
@@ -26,17 +28,22 @@ export default class ProductOrder {
         }
 
         const uuid = randomUUID();
-        return new ProductOrder(uuid, product, quantity, orderDate);
+        const status = "opened";
+        return new ProductOrder(uuid, product, quantity, orderDate, status);
     }
 
 // GenerateUuid deve ser feito aqui ou no banco?
 
-    public static rebuild(uuid: string, product: Product, quantity: number, orderDate: Date): ProductOrder {
-        return new ProductOrder(uuid, product, quantity, orderDate);
+    public static rebuild(uuid: string, product: Product, quantity: number, orderDate: Date, status: string): ProductOrder {
+        return new ProductOrder(uuid, product, quantity, orderDate, status);
     }
 
     public getUuid(): string {
         return this.uuid;
+    }
+
+    public getStatus(): string {
+        return this.status;
     }
 
     public getProduct(): Product {

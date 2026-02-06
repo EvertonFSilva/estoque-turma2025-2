@@ -1,6 +1,6 @@
-import Product from '../../src/entities/Product';
-import type { CreateProductUsecaseInterface } from '../../src/usecases/CreateProductUsecase';
-import { CreateProductController } from '../../src/controllers/CreateProductController';
+import Product from '../../../src/entities/Product';
+import type { CreateProductUsecaseInterface } from '../../../src/usecases/CreateProductUsecase';
+import { CreateProductController } from '../../../src/controllers/CreateProductController';
 
 describe('CreateProductController', () => {
     test('should return 201 if the product is created successfully', async () => {

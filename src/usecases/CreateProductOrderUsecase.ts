@@ -3,7 +3,11 @@ import Product from "../entities/Product";
 import type { ProductOrderRepositoryInterface } from "../repositories/ProductOrderRepository";
 import type { ProductRepositoryInterface } from "../repositories/ProductRepository";
 
-export class CreateProductOrderUsecase {
+export interface CreateProductOrderUsecaseInterface {
+    execute(barcode: string, quantity: number, orderDate: Date): ProductOrder | Error;
+}
+
+export class CreateProductOrderUsecase implements CreateProductOrderUsecaseInterface {
 
     private productOrderRepository: ProductOrderRepositoryInterface;
     private productRepository: ProductRepositoryInterface;

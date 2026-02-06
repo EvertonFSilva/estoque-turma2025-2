@@ -26,6 +26,8 @@ export class ProductRepository implements ProductRepositoryInterface {
     }
 
     public createProduct(product: Product): boolean {
+        let resultado: boolean = false;
+
         const connection = this.sqliteConnection.getConnection();
         const statement = connection.prepare(`
             INSERT INTO products (barcode, name, quantity_in_stock, order_reference_days)
@@ -38,9 +40,8 @@ export class ProductRepository implements ProductRepositoryInterface {
         );
 
         if (result.changes > 0) {
-            return true;
-        } else {
-            return false;
+            resultado = true;
         }
+        return resultado;
     }
 }

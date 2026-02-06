@@ -1,8 +1,8 @@
-import Product from '../../src/entities/Product';
-import ProductOrder from '../../src/entities/ProductOrder';
-import { ProductOrderRepositoryInterface } from '../../src/repositories/ProductOrderRepository';
-import { ProductRepositoryInterface } from '../../src/repositories/ProductRepository';
-import { CreateProductOrderUsecase } from '../../src/usecases/CreateProductOrderUsecase';
+import Product from '../../../src/entities/Product';
+import ProductOrder from '../../../src/entities/ProductOrder';
+import { ProductOrderRepositoryInterface } from '../../../src/repositories/ProductOrderRepository';
+import { ProductRepositoryInterface } from '../../../src/repositories/ProductRepository';
+import { CreateProductOrderUsecase } from '../../../src/usecases/CreateProductOrderUsecase';
 
 describe('CreateProductOrderUsecase', () => {
     test('should create a product order successfully', async () => {

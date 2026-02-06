@@ -1,5 +1,5 @@
-import ProductOrder from '../../src/entities/ProductOrder';
-import Product from '../../src/entities/Product';
+import ProductOrder from '../../../src/entities/ProductOrder';
+import Product from '../../../src/entities/Product';
 
 describe('Entidade ProductOrder', () => {
   
@@ -19,6 +19,7 @@ describe('Entidade ProductOrder', () => {
                 expect(productOrder.getProduct()).toBe(product);
                 expect(productOrder.getQuantity()).toBe(quantity);
                 expect(productOrder.getOrderDate()).toEqual(orderDate);
+                expect(productOrder.getStatus()).toBe('opened');
             }
         }
     });
@@ -64,13 +65,15 @@ describe('Entidade ProductOrder', () => {
         const product = Product.rebuild('9876543210987', 'Guaraná Antarctica 2L', 30, 14);
         const quantity: number = 20;
         const orderDate: Date = new Date('2025-11-14');
+        const status: string = 'opened';
 
-        const productOrder = ProductOrder.rebuild(uuid, product, quantity, orderDate);
+        const productOrder = ProductOrder.rebuild(uuid, product, quantity, orderDate, status);
 
         expect(productOrder).toBeInstanceOf(ProductOrder);
         expect(productOrder.getUuid()).toBe(uuid);
         expect(productOrder.getProduct()).toBe(product);
         expect(productOrder.getQuantity()).toBe(quantity);
         expect(productOrder.getOrderDate()).toEqual(orderDate);
+        expect(productOrder.getStatus()).toBe(status);
     });
 });

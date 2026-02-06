@@ -1,7 +1,11 @@
 import Product from "../entities/Product";
 import type { ProductRepositoryInterface } from "../repositories/ProductRepository";
 
-export class GetProductUsecase {
+export interface GetProductUsecaseInterface {
+    execute(barcode: string): Product | Error;
+}
+
+export class GetProductUsecase implements GetProductUsecaseInterface {
 
     private productRepository: ProductRepositoryInterface;
 

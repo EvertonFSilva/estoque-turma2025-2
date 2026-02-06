@@ -1,6 +1,6 @@
-import Product from '../../src/entities/Product';
-import { ProductRepositoryInterface } from '../../src/repositories/ProductRepository';
-import { CreateProductUsecase } from '../../src/usecases/CreateProductUsecase';
+import Product from '../../../src/entities/Product';
+import { ProductRepositoryInterface } from '../../../src/repositories/ProductRepository';
+import { CreateProductUsecase } from '../../../src/usecases/CreateProductUsecase';
 
 describe('CreateProductUsecase', () => {
     test('should create a product successfully', async () => {

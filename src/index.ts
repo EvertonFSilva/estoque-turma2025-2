@@ -1,4 +1,3 @@
-import Product from "./entities/Product";
 import { SqliteConnection } from "./repositories/SqliteConnection";
 import { ProductRepository } from "./repositories/ProductRepository";
 import { CreateProductUsecase } from "./usecases/CreateProductUsecase";

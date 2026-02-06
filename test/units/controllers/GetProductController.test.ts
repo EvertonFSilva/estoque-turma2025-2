@@ -1,11 +1,12 @@
-import Product from '../../src/entities/Product';
-import { GetProductController } from '../../src/controllers/GetProductController';
-import type { GetProductUsecase } from '../../src/usecases/GetProductUsecase';
+import Product from '../../../src/entities/Product';
+import { GetProductController } from '../../../src/controllers/GetProductController';
+import type { GetProductUsecase } from '../../../src/usecases/GetProductUsecase';
+import type { GetProductUsecaseInterface } from '../../../src/usecases/GetProductUsecase';
 
 describe('GetProductController', () => {
     test('should return 200 if the product is found successfully', async () => {
 
-        class GetProductUsecaseMock implements Pick<GetProductUsecase, 'execute'> {
+        class GetProductUsecaseMock implements GetProductUsecaseInterface {
             execute(barcode: string): Product | Error {
                 return Product.rebuild(barcode, 'Test Product', 50, 10);
             }
@@ -46,7 +47,7 @@ describe('GetProductController', () => {
 
     test('should return 400 if the usecase returns an ERROR', async () => {
 
-        class GetProductUsecaseMock implements Pick<GetProductUsecase, 'execute'> {
+        class GetProductUsecaseMock implements GetProductUsecaseInterface {
             execute(barcode: string): Product | Error {
                 return new Error('Product not found');
             }

@@ -1,15 +1,16 @@
-import ProductOrder from '../../src/entities/ProductOrder';
-import Product from '../../src/entities/Product';
-import { CreateProductOrderController } from '../../src/controllers/CreateProductOrderController';
-import type { CreateProductOrderUsecase } from '../../src/usecases/CreateProductOrderUsecase';
+import ProductOrder from '../../../src/entities/ProductOrder';
+import Product from '../../../src/entities/Product';
+import { CreateProductOrderController } from '../../../src/controllers/CreateProductOrderController';
+import type { CreateProductOrderUsecase } from '../../../src/usecases/CreateProductOrderUsecase';
+import type { CreateProductOrderUsecaseInterface } from '../../../src/usecases/CreateProductOrderUsecase';
 
 describe('CreateProductOrderController', () => {
     test('should return 201 if the product order is created successfully', async () => {
 
-        class CreateProductOrderUsecaseMock implements Pick<CreateProductOrderUsecase, 'execute'> {
+        class CreateProductOrderUsecaseMock implements CreateProductOrderUsecaseInterface {
             execute(barcode: string, quantity: number, orderDate: Date): ProductOrder | Error {
                 const product = Product.rebuild(barcode, 'Test Product', 50, 10);
-                return ProductOrder.rebuild('test-uuid-123', product, quantity, orderDate);
+                return ProductOrder.rebuild('test-uuid-123', product, quantity, orderDate, 'opened');
             }
         }
 
@@ -51,7 +52,7 @@ describe('CreateProductOrderController', () => {
 
     test('should return 400 if the usecase returns an ERROR', async () => {
 
-        class CreateProductOrderUsecaseMock implements Pick<CreateProductOrderUsecase, 'execute'> {
+        class CreateProductOrderUsecaseMock implements CreateProductOrderUsecaseInterface {
             execute(barcode: string, quantity: number, orderDate: Date): ProductOrder | Error {
                 return new Error('Product not found');
             }
