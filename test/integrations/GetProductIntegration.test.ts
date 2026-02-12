@@ -18,15 +18,7 @@ describe("Get Product Integration Test", () => {
         db.exec("DELETE FROM productOrder;");
         db.exec("DELETE FROM products;");
         db.exec("PRAGMA foreign_keys = ON;");
-
-        const product = Product.rebuild(
-            "123999",
-            "Produto Consulta",
-            10,
-            7
-        );
-
-        productRepository.createProduct(product);
+        db.exec("insert into products (barcode, name, quantity_in_stock, order_reference_days) values ('123999', 'Produto Consulta', 10, 7);");
 
         const requestMock: any = {
             body: {

@@ -22,9 +22,9 @@ describe('Create Product Order Integration Test', () => {
         db.exec("DELETE FROM productOrder;");
         db.exec("DELETE FROM products;");
         db.exec("PRAGMA foreign_keys = ON;");
+        db.exec("insert into products (barcode, name, quantity_in_stock, order_reference_days) values ('123456', 'Test Product', 0, 10);");
 
         const product = Product.rebuild('123456', 'Test Product', 0, 10);
-        productRepository.createProduct(product);
 
         const orderDate = new Date();
 
