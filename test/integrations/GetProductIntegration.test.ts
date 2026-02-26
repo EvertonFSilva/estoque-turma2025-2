@@ -21,7 +21,7 @@ describe("Get Product Integration Test", () => {
         db.exec("insert into products (barcode, name, quantity_in_stock, order_reference_days) values ('123999', 'Produto Consulta', 10, 7);");
 
         const requestMock: any = {
-            body: {
+            params: {
                 barcode: "123999"
             }
         };

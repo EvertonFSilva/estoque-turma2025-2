@@ -16,7 +16,7 @@ describe('GetProductController', () => {
         const getProductController = new GetProductController(getProductUsecase as GetProductUsecase);
 
         const requestMock: any = {
-            body: {
+            params: {
                 barcode: '123456'
             }
         };
@@ -57,7 +57,7 @@ describe('GetProductController', () => {
         const getProductController = new GetProductController(getProductUsecase as GetProductUsecase);
 
         const requestMock: any = {
-            body: {
+            params: {
                 barcode: '999999'
             }
         };

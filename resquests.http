@@ -10,5 +10,37 @@ content-type: application/json
     "orderReferenceDays": 30
 }
 
-### requisição GET para listar produtos
-GET http://localhost:3000/products
+### requisição GET para buscar produto
+GET http://localhost:3000/products/1234567899
+content-type: application/json
+
+### requisição POST para criar pedido do produto
+POST http://localhost:3000/product-orders
+content-type: application/json
+
+{
+    "barcode": "1234567899",
+    "quantity": 10,
+    "orderDate": "2026-02-20T00:00:00.000Z"
+}
+
+### requisição POST para criar entrada do produto
+POST http://localhost:3000/product-inputs
+content-type: application/json
+
+{
+    "productOrderId": "a9c61ef2-bab3-4cfe-8838-766c25ce7ada",
+    "quantity": 10,
+    "inputDate": "2026-02-25T00:00:00.000Z"
+}
+
+### requisição POST para criar saída do produto
+POST http://localhost:3000/product-outputs
+content-type: application/json
+
+{
+    "barcode": "1234567899",
+    "quantity": 2,
+    "outputDate": "2026-02-28T00:00:00.000Z"
+}
+

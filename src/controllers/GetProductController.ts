@@ -11,7 +11,7 @@ export class GetProductController {
     }
 
     public async handle(request: FastifyRequest, response: FastifyReply): Promise<FastifyReply> {
-        const { barcode} = request.body as { barcode: string;};
+        const { barcode } = request.params as { barcode: string };
 
         const result = this.getProductUsecase.execute(barcode);
 

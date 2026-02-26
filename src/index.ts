@@ -7,7 +7,9 @@ import { CreateProductOrderUsecase } from "./usecases/CreateProductOrderUsecase"
 import { CreateProductController } from "./controllers/CreateProductController";
 import { GetProductController } from "./controllers/GetProductController";
 import { CreateProductOrderController } from "./controllers/CreateProductOrderController";
+import { CreateProductInputController } from "./controllers/CreateProductInputController";
 import fastify from "fastify";
+import { CreateProductOutputController } from "./controllers/CreateProductOutputController";
 
 const sqliteConnection = new SqliteConnection("db/estoque.db");
 
@@ -30,6 +32,10 @@ const createProductOrderController = new CreateProductOrderController(
   createProductOrderUsecase
 );
 
+const createProductInputController = new CreateProductInputController();
+
+const createProductOutputController = new CreateProductOutputController();
+
 const app = fastify();
 
 app.post("/products", createProductController.handle.bind(createProductController));
@@ -42,6 +48,16 @@ app.get(
 app.post(
   "/product-orders",
   createProductOrderController.handle.bind(createProductOrderController)
+);
+
+app.post(
+  "/product-inputs",
+  createProductInputController.handle.bind(createProductInputController)
+);
+
+app.post(
+  "/product-outputs",
+  createProductOutputController.handle.bind(createProductOutputController)
 );
 
 app.listen({ port: 3000 }, (err, address) => {

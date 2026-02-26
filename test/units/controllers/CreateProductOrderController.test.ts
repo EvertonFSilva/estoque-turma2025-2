@@ -44,10 +44,11 @@ describe('CreateProductOrderController', () => {
 
         expect(responseMock.statusCode).toBe(201);
         expect(responseMock.data).toEqual({
-            product: expect.any(Product),
+            productOrderId: expect.any(String),
             quantity: 20,
             orderDate: orderDate,
-            status: 'opened'
+            status: 'opened',
+            product: expect.any(Product)
         });
     });
 

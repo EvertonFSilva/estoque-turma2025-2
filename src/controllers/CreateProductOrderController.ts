@@ -18,10 +18,11 @@ export class CreateProductOrderController {
 
         if (result instanceof ProductOrder) {
             return response.status(201).send({
-                product: result.getProduct(),
+                productOrderId: result.getUuid(),
                 quantity: result.getQuantity(),
                 orderDate: result.getOrderDate(),
-                status: result.getStatus()
+                status: result.getStatus(),
+                product: result.getProduct()
             });
         }
 

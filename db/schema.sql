@@ -16,3 +16,19 @@ CREATE TABLE productOrder (
     status TEXT NOT NULL,
     FOREIGN KEY (product_fk) REFERENCES products(barcode)
 );
+
+CREATE TABLE productInput (
+    uuid TEXT PRIMARY KEY,
+    productOrder_fk TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    inputDate TEXT NOT NULL,
+    FOREIGN KEY (productOrder_fk) REFERENCES productOrder(uuid)
+);
+
+CREATE TABLE productOutput (
+    uuid TEXT PRIMARY KEY,
+    product_fk TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    outputDate TEXT NOT NULL,
+    FOREIGN KEY (product_fk) REFERENCES products(barcode)
+);
