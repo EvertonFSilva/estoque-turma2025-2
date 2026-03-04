@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import { CreateProductInputController } from "../../src/controllers/CreateProductInputController";
 
-const DB_PATH = "db/estoque.db";
+const DB_PATH = "db/estoque-testes.db";
 
 const makeRequestMock = (body: object): any => ({
     body
@@ -43,7 +43,7 @@ describe("CreateProductInput Integration Test", () => {
     beforeEach(() => {
         db = new Database(DB_PATH);
         seedDatabase(db);
-        controller = new CreateProductInputController();
+        controller = new CreateProductInputController(DB_PATH);
     });
 
     afterEach(() => {

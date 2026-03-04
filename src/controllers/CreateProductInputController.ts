@@ -3,6 +3,13 @@ import Database from "better-sqlite3";
 
 
 export class CreateProductInputController {
+    // Permitir injetar o caminho do banco de teste para facilitar testes
+    private dbPath: string;
+
+    constructor(dbPath: string = "db/estoque.db") {
+        this.dbPath = dbPath;
+    }
+
     public async handle(request: FastifyRequest, response: FastifyReply): Promise<FastifyReply> {
         const { productOrderId, quantity, inputDate } = request.body as { productOrderId: string; quantity: number; inputDate: string; };
 
@@ -24,7 +31,7 @@ export class CreateProductInputController {
         }
         
         try {
-            const connection = new Database("db/estoque.db");
+            const connection = new Database(this.dbPath);
 
             const statement = connection.prepare("SELECT * FROM productOrder WHERE uuid = ?");
             const productOrder = statement.get(productOrderId) as { uuid: string; product_fk: string; quantity: number; orderDate: string, status: string } | undefined;
