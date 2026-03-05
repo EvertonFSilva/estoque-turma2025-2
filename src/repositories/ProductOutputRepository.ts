@@ -29,7 +29,7 @@ export class ProductOutputRepository implements ProductOutputRepositoryInterface
                 uuid,
                 product_fk,
                 quantity,
-                outputDate,
+                outputDate
             )
             VALUES (?, ?, ?, ?)
         `);
@@ -41,6 +41,7 @@ export class ProductOutputRepository implements ProductOutputRepositoryInterface
             productOutput.getOutputDate().toISOString()
         );
     }
+    
 
     public findByUuid(uuid: string): ProductOutput | null {
         const connection = this.sqliteConnection.getConnection();

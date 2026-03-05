@@ -3,6 +3,7 @@ import type { CreateProductOutputUsecase } from '../../../src/usecases/CreatePro
 import type { CreateProductOutputUsecaseInterface } from '../../../src/usecases/CreateProductOutputUsecase';
 import ProductOutput from '../../../src/entities/ProductOutput';
 import Product from '../../../src/entities/Product';
+import { ProductRepositoryInterface } from '../../../src/repositories/ProductRepository';
 
 jest.mock('crypto', () => ({
     randomUUID: jest.fn(() => 'mock-uuid')
@@ -142,6 +143,10 @@ describe('CreateProductOutputController (Legacy - Coupled)', () => {
     });
 
     test('should return 201 and update stock when successful', async () => {
+
+        const productRepositoryMock = {
+            findByBarcode: jest.fn(() => Product.rebuild('123', 'Test Product', 50, 6))
+        };
         class CreateProductOutputUsecaseMock implements CreateProductOutputUsecaseInterface {
             execute(barcode: string, quantity: number, outputDate: Date): ProductOutput | Error {
                 const product = Product.rebuild('123', 'Test Product', 50, 6);
@@ -150,7 +155,7 @@ describe('CreateProductOutputController (Legacy - Coupled)', () => {
         }
 
         const createProductOutputUsecase = new CreateProductOutputUsecaseMock();
-        const controller = new CreateProductOutputController(createProductOutputUsecase as CreateProductOutputUsecase);
+        const controller = new CreateProductOutputController(createProductOutputUsecase as CreateProductOutputUsecase, productRepositoryMock);
 
         const requestMock: any = {
             body: { barcode: '123', quantity: 4, outputDate: '2024-01-01' }
@@ -169,15 +174,19 @@ describe('CreateProductOutputController (Legacy - Coupled)', () => {
         });
     });
 
-    test('should return 500 on unexpected error', async () => {
+    test('should return 201 and productStock 0 if updatedProduct is undefined', async () => {
+        const productRepositoryMock = {
+            findByBarcode: jest.fn(() => undefined)
+        };
         class CreateProductOutputUsecaseMock implements CreateProductOutputUsecaseInterface {
             execute(barcode: string, quantity: number, outputDate: Date): ProductOutput | Error {
-                throw new Error('DB error');
+                const product = Product.rebuild('123', 'Test Product', 50, 6);
+                return ProductOutput.rebuild('mock-uuid', product, 4, new Date('2024-01-01'));
             }
         }
 
         const createProductOutputUsecase = new CreateProductOutputUsecaseMock();
-        const controller = new CreateProductOutputController(createProductOutputUsecase as CreateProductOutputUsecase);
+        const controller = new CreateProductOutputController(createProductOutputUsecase as CreateProductOutputUsecase, productRepositoryMock);
 
         const requestMock: any = {
             body: { barcode: '123', quantity: 4, outputDate: '2024-01-01' }
@@ -185,8 +194,14 @@ describe('CreateProductOutputController (Legacy - Coupled)', () => {
 
         await controller.handle(requestMock, responseMock);
 
-        expect(responseMock.statusCode).toBe(500);
-        expect(responseMock.data).toEqual({ error: 'Internal server error' });
+        expect(responseMock.statusCode).toBe(201);
+        expect(responseMock.data).toEqual({
+            productOutputId: 'mock-uuid',
+            productOutputQuantity: 4,
+            productOutputDate: new Date('2024-01-01').toISOString(),
+            productBarcode: '123',
+            productName: 'Test Product',
+            productStock: 0
+        });
     });
-
 });

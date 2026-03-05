@@ -18,7 +18,7 @@ describe('Create Product Output Integration Test - Happy Path', () => {
         productRepository = new ProductRepository(sqliteConnection);
         productOutputRepository = new ProductOutputRepository(sqliteConnection, productRepository);
         createProductOutputUsecase = new CreateProductOutputUsecase(productOutputRepository, productRepository);
-        createProductOutputController = new CreateProductOutputController(createProductOutputUsecase);
+        createProductOutputController = new CreateProductOutputController(createProductOutputUsecase, productRepository);
 
         const db = sqliteConnection.getConnection();
         
@@ -27,15 +27,7 @@ describe('Create Product Output Integration Test - Happy Path', () => {
         db.exec("DELETE FROM productOutput;");
         db.exec("DELETE FROM products;");
         db.exec("PRAGMA foreign_keys = ON;");
-    });
-
-    afterEach(() => {
-        const db = sqliteConnection.getConnection();
-        db.exec("PRAGMA foreign_keys = OFF;");
-        db.exec("DELETE FROM productOutput;");
-        db.exec("DELETE FROM products;");
-        db.exec("PRAGMA foreign_keys = ON;");
-        db.exec("insert into products (barcode, name, quantity_in_stock, order_reference_days) values ('123456', 'Test Product', 10, 0);");
+        db.exec("insert into products (barcode, name, quantity_in_stock, order_reference_days) values ('123456', 'Test Product', 200, 0);");
     });
 
     test('should create a new product output successfully', async () => {
