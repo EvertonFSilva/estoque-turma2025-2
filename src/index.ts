@@ -14,6 +14,8 @@ import fastify from "fastify";
 import { CreateProductOutputController } from "./controllers/CreateProductOutputController";
 import { DeleteProductInputController } from "./controllers/DeleteProductInputController";
 import { DeleteProductOutputController } from "./controllers/DeleteProductOutputController";
+import { ListProductsUsecase } from "./usecases/ListProductsUsecase";
+import { ListProductsController } from "./controllers/ListProductsController";
 
 const sqliteConnection = new SqliteConnection("db/estoque.db");
 
@@ -56,6 +58,11 @@ app.post("/products", createProductController.handle.bind(createProductControlle
 app.get(
   "/products/:barcode",
   getProductController.handle.bind(getProductController)
+);
+
+app.get(
+  "/products",
+  listProductsController.handle.bind(listProductsController)
 );
 
 app.post(
