@@ -1,5 +1,10 @@
 import Database from "better-sqlite3";
 import { CreateProductInputController } from "../../src/controllers/CreateProductInputController";
+import { CreateProductInputUseCase } from "../../src/usecases/CreateProductInputUseCase";
+import { ProductInputRepository } from "../../src/repositories/ProductInputRepository";
+import { ProductOrderRepository } from "../../src/repositories/ProductOrderRepository";
+import { ProductRepository } from "../../src/repositories/ProductRepository";
+import { SqliteConnection } from "../../src/repositories/SqliteConnection";
 
 const DB_PATH = "db/estoque-testes.db";
 
@@ -43,7 +48,17 @@ describe("CreateProductInput Integration Test", () => {
     beforeEach(() => {
         db = new Database(DB_PATH);
         seedDatabase(db);
-        controller = new CreateProductInputController(DB_PATH);
+        
+        const sqliteConnection = new SqliteConnection(DB_PATH);
+        const productRepository = new ProductRepository(sqliteConnection);
+        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
+        const productInputRepository = new ProductInputRepository(sqliteConnection);
+        const createProductInputUseCase = new CreateProductInputUseCase(
+            productInputRepository,
+            productOrderRepository,
+            productRepository
+        );
+        controller = new CreateProductInputController(createProductInputUseCase);
     });
 
     afterEach(() => {

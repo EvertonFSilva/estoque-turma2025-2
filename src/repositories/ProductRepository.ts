@@ -4,6 +4,7 @@ import { SqliteConnection } from "./SqliteConnection";
 export interface ProductRepositoryInterface {
     findByBarcode(barcode: string): Product | null;
     createProduct(product: Product): boolean;
+    updateStock(barcode: string, newStock: number): void;
 }
 
 export class ProductRepository implements ProductRepositoryInterface {
@@ -43,5 +44,11 @@ export class ProductRepository implements ProductRepositoryInterface {
             resultado = true;
         }
         return resultado;
+    }
+
+    public updateStock(barcode: string, newStock: number): void {
+        const connection = this.sqliteConnection.getConnection();
+        const statement = connection.prepare("UPDATE products SET quantity_in_stock = ? WHERE barcode = ?");
+        statement.run(newStock, barcode);
     }
 }
