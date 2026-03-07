@@ -6,6 +6,7 @@ import { CreateProductUsecase } from "./usecases/CreateProductUsecase";
 import { GetProductUsecase } from "./usecases/GetProductUsecase";
 import { CreateProductOrderUsecase } from "./usecases/CreateProductOrderUsecase";
 import { CreateProductInputUseCase } from "./usecases/CreateProductInputUseCase";
+import { DeleteProductInputUseCase } from "./usecases/DeleteProductInputUsecase";
 import { CreateProductController } from "./controllers/CreateProductController";
 import { GetProductController } from "./controllers/GetProductController";
 import { CreateProductOrderController } from "./controllers/CreateProductOrderController";
@@ -30,6 +31,7 @@ const createProductUsecase = new CreateProductUsecase(productRepository);
 const getProductUsecase = new GetProductUsecase(productRepository);
 const createProductOrderUsecase = new CreateProductOrderUsecase(productOrderRepository,productRepository);
 const createProductInputUseCase = new CreateProductInputUseCase(productInputRepository,productOrderRepository,productRepository);
+const deleteProductInputUseCase = new DeleteProductInputUseCase(productInputRepository,productOrderRepository,productRepository);
 const createProductOutputUsecase = new CreateProductOutputUsecase(productOutputRepository,productRepository);
 const listProductsUsecase = new ListProductsUsecase(productRepository);
 
@@ -40,7 +42,7 @@ const createProductOrderController = new CreateProductOrderController(createProd
 const createProductInputController = new CreateProductInputController(createProductInputUseCase);
 const createProductOutputController = new CreateProductOutputController(createProductOutputUsecase, productRepository);
 const listProductsController = new ListProductsController(listProductsUsecase);
-const deleteProductInputController = new DeleteProductInputController();
+const deleteProductInputController = new DeleteProductInputController(deleteProductInputUseCase);
 const deleteProductOutputController = new DeleteProductOutputController();
 
 const app = fastify();

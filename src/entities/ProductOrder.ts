@@ -61,4 +61,8 @@ export default class ProductOrder {
     public closeProductOrder() {
         this.status = "closed";
     }
+
+    public openProductOrder() {
+        this.status = "opened";
+    }
 }

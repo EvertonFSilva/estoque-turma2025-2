@@ -11,6 +11,10 @@ export default class ProductInput {
         this.inputDate = inputDate;
     }
 
+    public static rebuild(uuid: string, productOrderId: string, quantity: number, inputDate: Date): ProductInput {
+        return new ProductInput(uuid, productOrderId, quantity, inputDate);
+    }
+
     public static create(productOrderId: string, quantity: number, inputDate: Date): ProductInput | Error {
         if (!productOrderId) {
             return new Error("Product order ID is required");
