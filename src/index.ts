@@ -18,6 +18,7 @@ import { ListProductsUsecase } from "./usecases/ListProductsUsecase";
 import { ListProductsController } from "./controllers/ListProductsController";
 import { ProductOutputRepository } from "./repositories/ProductOutputRepository";
 import { CreateProductOutputUsecase } from "./usecases/CreateProductOutputUsecase";
+import { DeleteProductOutputUseCase } from "./usecases/DeleteProductOutputUsecase";
 
 const sqliteConnection = new SqliteConnection("db/estoque.db");
 
@@ -31,6 +32,7 @@ const getProductUsecase = new GetProductUsecase(productRepository);
 const createProductOrderUsecase = new CreateProductOrderUsecase(productOrderRepository,productRepository);
 const createProductInputUseCase = new CreateProductInputUseCase(productInputRepository,productOrderRepository,productRepository);
 const createProductOutputUsecase = new CreateProductOutputUsecase(productOutputRepository,productRepository);
+const deleteProductOutputUseCase = new DeleteProductOutputUseCase(productOutputRepository, productRepository);
 const listProductsUsecase = new ListProductsUsecase(productRepository);
 
 
@@ -41,8 +43,7 @@ const createProductInputController = new CreateProductInputController(createProd
 const createProductOutputController = new CreateProductOutputController(createProductOutputUsecase, productRepository);
 const listProductsController = new ListProductsController(listProductsUsecase);
 const deleteProductInputController = new DeleteProductInputController();
-const deleteProductOutputController = new DeleteProductOutputController();
-
+const deleteProductOutputController = new DeleteProductOutputController(deleteProductOutputUseCase);
 const app = fastify();
 
 app.post("/products", createProductController.handle.bind(createProductController));
