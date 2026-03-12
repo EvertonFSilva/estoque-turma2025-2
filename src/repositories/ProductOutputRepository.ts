@@ -1,6 +1,6 @@
 import ProductOutput from "../entities/ProductOutput";
-import type { ProductRepository } from "./ProductRepository";
-import type { SqliteConnection } from "./SqliteConnection";
+import { ProductRepository } from "./ProductRepository";
+import { SqliteConnection } from "./SqliteConnection";
 
 type ProductOutputRow = {
     uuid: string;
@@ -10,8 +10,9 @@ type ProductOutputRow = {
 };
 
 export interface ProductOutputRepositoryInterface {
-    save(productOutput: ProductOutput): void;
     findByUuid(uuid: string): ProductOutput | null;
+    save(productOutput: ProductOutput): void;
+    delete(uuid: string): void;
 }
 
 export class ProductOutputRepository implements ProductOutputRepositoryInterface {
@@ -20,6 +21,35 @@ export class ProductOutputRepository implements ProductOutputRepositoryInterface
         private readonly sqliteConnection: SqliteConnection,
         private readonly productRepository: ProductRepository
     ) {}
+
+    public findByUuid(uuid: string): ProductOutput | null {
+        const connection = this.sqliteConnection.getConnection();
+
+        const statement = connection.prepare(`
+            SELECT uuid, product_fk, quantity, outputDate
+            FROM productOutput
+            WHERE uuid = ?
+        `);
+
+        const row = statement.get(uuid) as ProductOutputRow | undefined;
+
+        if (!row) {
+            return null;
+        }
+
+        const product = this.productRepository.findByBarcode(row.product_fk);
+
+        if (!product) {
+            throw new Error(`Related product ${row.product_fk} not found`);
+        }
+
+        return ProductOutput.rebuild(
+            row.uuid,
+            product,
+            row.quantity,
+            new Date(row.outputDate)
+        );
+    }
 
     public save(productOutput: ProductOutput): void {
         const connection = this.sqliteConnection.getConnection();
@@ -41,34 +71,15 @@ export class ProductOutputRepository implements ProductOutputRepositoryInterface
             productOutput.getOutputDate().toISOString()
         );
     }
-    
 
-    public findByUuid(uuid: string): ProductOutput | null {
+    public delete(uuid: string): void {
         const connection = this.sqliteConnection.getConnection();
 
         const statement = connection.prepare(`
-            SELECT uuid, product_fk, quantity, outputDate
-            FROM productOutput
+            DELETE FROM productOutput
             WHERE uuid = ?
         `);
 
-        const row = statement.get(uuid) as ProductOutputRow | undefined;
-
-        if (!row) {
-            return null;
-        }
-
-        const product = this.productRepository.findByBarcode(row.product_fk);
-        if (!product) {
-            throw new Error(`Related product ${row.product_fk} not found`);
-        }
-
-        return ProductOutput.rebuild(
-            row.uuid,
-            product,
-            row.quantity,
-            new Date(row.outputDate),
-        );
+        statement.run(uuid);
     }
-    
 }
