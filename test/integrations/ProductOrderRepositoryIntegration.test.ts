@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test, beforeEach } from '@jest/globals';
 import ProductOrder from '../../src/entities/ProductOrder';
 import { SqliteConnection } from '../../src/repositories/SqliteConnection';
 import { ProductRepository } from '../../src/repositories/ProductRepository';
@@ -6,27 +6,29 @@ import { ProductOrderRepository } from '../../src/repositories/ProductOrderRepos
 
 // teste de integração usando os métodos findByUuid e listAll, incluindo casos de sucesso e falha (quando o produto relacionado não existe)
 describe('ProductOrderRepository Integration Test', () => {
-    const resetTables = (sqliteConnection: SqliteConnection): void => {
+    let sqliteConnection: SqliteConnection;
+    let productOrderRepository: ProductOrderRepository;
+
+    beforeEach(() => {
+        sqliteConnection = new SqliteConnection('db/estoque-testes.db');
+        const productRepository = new ProductRepository(sqliteConnection);
+        productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
         const db = sqliteConnection.getConnection();
         db.exec('PRAGMA foreign_keys = OFF;');
         db.exec('DELETE FROM productOrder;');
         db.exec('DELETE FROM products;');
         db.exec('PRAGMA foreign_keys = ON;');
-    };
+    });
 
     // deve pegar uma ordem de produto por uuid com sucesso
     test('should get product order by uuid successfully', () => {
-        const sqliteConnection = new SqliteConnection('db/estoque-testes.db');
-        const productRepository = new ProductRepository(sqliteConnection);
-        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
-        // reseta as tabelas para garantir um ambiente limpo para o teste
-        resetTables(sqliteConnection);
         const db = sqliteConnection.getConnection();
 
         db.exec("INSERT INTO products (barcode, name, quantity_in_stock, order_reference_days) VALUES ('333', 'Produto 3', 0, 12);");
         db.exec("INSERT INTO productOrder (uuid, product_fk, quantity, orderDate, status) VALUES ('order-3', '333', 9, '2026-01-12T00:00:00.000Z', 'opened');");
 
         const result = productOrderRepository.findByUuid('order-3');
+
 
         expect(result).toBeInstanceOf(ProductOrder);
         expect(result?.getUuid()).toBe('order-3');
@@ -38,12 +40,6 @@ describe('ProductOrderRepository Integration Test', () => {
 
     // deve retornar null quando o uuid não existir
     test('should return null when uuid does not exist', () => {
-        const sqliteConnection = new SqliteConnection('db/estoque-testes.db');
-        const productRepository = new ProductRepository(sqliteConnection);
-        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
-
-        resetTables(sqliteConnection);
-
         const result = productOrderRepository.findByUuid('order-not-found');
 
         expect(result).toBeNull();
@@ -51,11 +47,6 @@ describe('ProductOrderRepository Integration Test', () => {
 
     // deve lançar um erro quando o produto relacionado à ordem não existir
     test('should throw ERROR if related product does not exist when getting order by uuid', () => {
-        const sqliteConnection = new SqliteConnection('db/estoque-testes.db');
-        const productRepository = new ProductRepository(sqliteConnection);
-        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
-
-        resetTables(sqliteConnection);
         const db = sqliteConnection.getConnection();
 
         db.exec('PRAGMA foreign_keys = OFF;');
@@ -67,11 +58,6 @@ describe('ProductOrderRepository Integration Test', () => {
 
     // deve listar todas as ordens de produto com sucesso
     test('should list all product orders successfully', () => {
-        const sqliteConnection = new SqliteConnection('db/estoque-testes.db');
-        const productRepository = new ProductRepository(sqliteConnection);
-        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
-
-        resetTables(sqliteConnection);
         const db = sqliteConnection.getConnection();
 
         db.exec("INSERT INTO products (barcode, name, quantity_in_stock, order_reference_days) VALUES ('111', 'Produto 1', 0, 7);");
@@ -97,12 +83,6 @@ describe('ProductOrderRepository Integration Test', () => {
 
     // deve retornar uma lista vazia quando não houver ordens de produto
     test('should return empty list when there are no product orders', () => {
-        const sqliteConnection = new SqliteConnection('db/estoque-testes.db');
-        const productRepository = new ProductRepository(sqliteConnection);
-        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
-
-        resetTables(sqliteConnection);
-
         const result = productOrderRepository.listAll();
 
         expect(result).toEqual([]);
@@ -110,11 +90,6 @@ describe('ProductOrderRepository Integration Test', () => {
 
     // deve lançar um erro quando o produto relacionado a uma das ordens não existir
     test('should throw ERROR if related product does not exist when listing orders', () => {
-        const sqliteConnection = new SqliteConnection('db/estoque-testes.db');
-        const productRepository = new ProductRepository(sqliteConnection);
-        const productOrderRepository = new ProductOrderRepository(sqliteConnection, productRepository);
-
-        resetTables(sqliteConnection);
         const db = sqliteConnection.getConnection();
 
         db.exec('PRAGMA foreign_keys = OFF;');
