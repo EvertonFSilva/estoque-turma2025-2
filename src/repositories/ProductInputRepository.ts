@@ -4,6 +4,7 @@ import { SqliteConnection } from "./SqliteConnection";
 export interface ProductInputRepositoryInterface {
     save(productInput: ProductInput): void;
     findByUuid(uuid: string): ProductInput | null;
+    findByProductOrder_fk(productOrder_fk: string): ProductInput | null ;
     delete(uuid: string): void;
 }
 
@@ -29,6 +30,16 @@ export class ProductInputRepository implements ProductInputRepositoryInterface {
         const connection = this.sqliteConnection.getConnection();
         const statement = connection.prepare("SELECT * FROM productInput WHERE uuid = ?");
         const row = statement.get(uuid) as { uuid: string; productOrder_fk: string; quantity: number; inputDate: string } | undefined;
+        if (!row) {
+            return null;
+        }
+        return ProductInput.rebuild(row.uuid, row.productOrder_fk, row.quantity, new Date(row.inputDate));
+    }
+
+    public findByProductOrder_fk(productOrder_fk: string): ProductInput | null {
+        const connection = this.sqliteConnection.getConnection();
+        const statement = connection.prepare("SELECT * FROM productInput WHERE productOrder_fk = ?");
+        const row = statement.get(productOrder_fk) as { uuid: string; productOrder_fk: string; quantity: number; inputDate: string } | undefined;
         if (!row) {
             return null;
         }

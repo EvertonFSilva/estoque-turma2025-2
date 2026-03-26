@@ -25,7 +25,7 @@ content-type: application/json
 {
     "barcode": "1234567890",
     "quantity": 100,
-    "orderDate": "2026-02-20T00:00:00.000Z"
+    "orderDate": "2026-03-23T00:00:00.000Z"
 }
 
 ### requisição POST para criar entrada do produto
@@ -33,9 +33,9 @@ POST http://localhost:3000/product-inputs
 content-type: application/json
 
 {
-    "productOrderId": "d7869ba4-92bd-4176-8ad4-2a3c9528434d",
+    "productOrderId": "5658e844-f485-4ced-b68d-946f2199084e",
     "quantity": 120,
-    "inputDate": "2026-02-28T00:00:00.000Z"
+    "inputDate": "2026-03-28T00:00:00.000Z"
 }
 
 ### requisição POST para criar saída do produto
@@ -55,4 +55,4 @@ DELETE http://localhost:3000/product-inputs/22c0c0f0-f5d0-4fb2-a994-46bd6bcb153b
 DELETE http://localhost:3000/product-outputs/012b7e13-26f4-432e-a00a-d03178fbd31b
 
 ### requisição DELETE para deletar pedido do produto
-DELETE http://localhost:3000/product-orders/d7869ba4-92bd-4176-8ad4-2a3c9528434d
+DELETE http://localhost:3000/product-orders/5658e844-f485-4ced-b68d-946f2199084e

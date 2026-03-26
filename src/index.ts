@@ -22,6 +22,7 @@ import { ListProductsController } from "./controllers/ListProductsController";
 import { ProductOutputRepository } from "./repositories/ProductOutputRepository";
 import { CreateProductOutputUsecase } from "./usecases/CreateProductOutputUsecase";
 import { DeleteProductOutputUseCase } from "./usecases/DeleteProductOutputUsecase";
+import { DeleteProductOrderUseCase } from "./usecases/DeleteProductOrderUseCase";
 import { DeleteProductOrderController } from "./controllers/DeleteProductOrderController";
 import { ListProductOrdersUsecase } from "./usecases/ListProductOrdersUsecase";
 import { ListProductOrderController } from "./controllers/ListProductOrderController";
@@ -39,6 +40,7 @@ const getProductUsecase = new GetProductUsecase(productRepository);
 const createProductOrderUsecase = new CreateProductOrderUsecase(productOrderRepository,productRepository);
 const createProductInputUseCase = new CreateProductInputUseCase(productInputRepository,productOrderRepository,productRepository);
 const deleteProductInputUseCase = new DeleteProductInputUseCase(productInputRepository,productOrderRepository,productRepository);
+const deleteProducOrderUseCase = new DeleteProductOrderUseCase(productOrderRepository, productInputRepository);
 const deleteProductOutputUseCase = new DeleteProductOutputUseCase(productOutputRepository, productRepository);
 const createProductOutputUsecase = new CreateProductOutputUsecase(productOutputRepository,productRepository);
 const listProductsUsecase = new ListProductsUsecase(productRepository);
@@ -54,9 +56,9 @@ const listProductsController = new ListProductsController(listProductsUsecase);
 const deleteProductInputController = new DeleteProductInputController(deleteProductInputUseCase);
 const deleteProductOutputController = new DeleteProductOutputController(deleteProductOutputUseCase);
 
-const deleteProductOrderController = new DeleteProductOrderController();
 const listProductOrderController = new ListProductOrderController(listProductOrdersUsecase);
 const getProductOrderController = new GetProductOrderController(productOrderRepository);
+const deleteProductOrderController = new DeleteProductOrderController(deleteProducOrderUseCase);
 
 const app = fastify();
 

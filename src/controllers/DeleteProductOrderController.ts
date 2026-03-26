@@ -1,8 +1,14 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import Database from "better-sqlite3";
+import type { DeleteProductOrderUseCaseInterface } from "../usecases/DeleteProductOrderUseCase";
 
 
 export class DeleteProductOrderController {
+    private deleteProductOrderUseCase: DeleteProductOrderUseCaseInterface;
+
+    constructor(deleteProductOrderUseCase: DeleteProductOrderUseCaseInterface){
+        this.deleteProductOrderUseCase = deleteProductOrderUseCase;
+    }
+
     public async handle(request: FastifyRequest, response: FastifyReply): Promise<FastifyReply> {
         const { productOrderId } = request.params as { productOrderId: string };
 
@@ -11,26 +17,21 @@ export class DeleteProductOrderController {
         }
         
         try {
-            const connection = new Database("db/estoque.db");
-
-            const getProductOrderStatement = connection.prepare("SELECT * FROM productOrder WHERE uuid = ?");
-            const productOrder = getProductOrderStatement.get(productOrderId) as { uuid: string; product_fk: string; quantity: number; orderDate: string, status: string } | undefined;
-            if (!productOrder) {
-                return response.status(404).send({ error: "Product order not found" });
+            const result = this.deleteProductOrderUseCase.execute(productOrderId);
+            
+            if (result instanceof Error){
+                if (result.message === "Product order not found") {
+                    return response.status(404).send({ error: result.message });
+                }
+                else if (result.message === "Cannot delete product order with associated product input") {
+                    return response.status(400).send({ error: result.message });
+                }
+                else {
+                    return response.status(500).send({ message: result.message});
+                } 
             }
 
-            const getProductInputStatement = connection.prepare("SELECT * FROM productInput WHERE productOrder_fk = ?");
-            const productInput = getProductInputStatement.get(productOrder.uuid) as { uuid: string; productOrder_fk: string; quantity: number; inputDate: string } | undefined;
-            if (productInput) {
-                return response.status(400).send({ error: "Cannot delete product order with associated product input" });
-            }
-
-            const deleteProductOrderStatement = connection.prepare("DELETE FROM productOrder WHERE uuid = ?");
-            deleteProductOrderStatement.run(productOrder.uuid);
-
-            return response.status(200).send({ 
-                message: "Product Order deleted successfully",
-             });
+            return response.status(200).send({ message: result.message });
 
         } catch (error) {
             return response.status(500).send({ error: "Internal server error" });
