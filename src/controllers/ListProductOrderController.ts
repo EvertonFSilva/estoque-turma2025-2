@@ -1,10 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { ListProductOrdersUsecase } from "../usecases/ListProductOrdersUsecase";
+import type { ListProductOrdersUsecase, ListProductOrdersUsecaseInterface } from "../usecases/ListProductOrdersUsecase";
 
 export class ListProductOrderController {
-  private listProductOrdersUsecase: ListProductOrdersUsecase;
+  private listProductOrdersUsecase: ListProductOrdersUsecaseInterface;
 
-  constructor(listProductOrdersUsecase: ListProductOrdersUsecase) {
+  constructor(listProductOrdersUsecase: ListProductOrdersUsecaseInterface) {
     this.listProductOrdersUsecase = listProductOrdersUsecase;
   }
 
@@ -21,12 +21,12 @@ export class ListProductOrderController {
     const orders = Array.isArray(result) ? result : [];
 
     return response.status(200).send(
-      orders.map((o) => ({
-        uuid: o.getUuid(),
-        product: o.getProduct().getName(),
-        quantity: o.getQuantity(),
-        orderDate: o.getOrderDate(),
-        status: o.getStatus(),
+      orders.map((order) => ({
+        uuid: order.getUuid(),
+        product: order.getProduct().getName(),
+        quantity: order.getQuantity(),
+        orderDate: order.getOrderDate(),
+        status: order.getStatus(),
       }))
     );
   }

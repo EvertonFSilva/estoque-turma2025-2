@@ -2,12 +2,12 @@ import { describe, expect, test } from '@jest/globals';
 import Product from '../../../src/entities/Product';
 import ProductOrder from '../../../src/entities/ProductOrder';
 import { ListProductOrderController } from '../../../src/controllers/ListProductOrderController';
-import type { ListProductOrdersUsecase } from '../../../src/usecases/ListProductOrdersUsecase';
+import type { ListProductOrdersUsecase, ListProductOrdersUsecaseInterface } from '../../../src/usecases/ListProductOrdersUsecase';
 
 describe('ListProductOrderController', () => {
     test('should return 200 with the list of product orders', async () => {
 
-        class ListProductOrdersUsecaseMock {
+        class ListProductOrdersUsecaseMock implements ListProductOrdersUsecaseInterface {
             execute(): ProductOrder[] | Error {
                 const product = Product.rebuild('123456', 'Produto Teste', 10, 7);
                 return [
@@ -57,7 +57,7 @@ describe('ListProductOrderController', () => {
 
     test('should return 400 if usecase returns an ERROR', async () => {
 
-        class ListProductOrdersUsecaseMock {
+        class ListProductOrdersUsecaseMock implements ListProductOrdersUsecaseInterface {
             execute(): ProductOrder[] | Error {
                 return new Error('Error listing product orders');
             }

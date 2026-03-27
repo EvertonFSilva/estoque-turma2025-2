@@ -18,6 +18,8 @@ describe('GetProductOrderController', () => {
             save(productOrder: ProductOrder): void {}
 
             updateStatus(productOrder: ProductOrder): void {}
+
+            delete(uuid: string): void {}
         }
 
         const productOrderRepository = new ProductOrderRepositoryMock();
@@ -72,6 +74,8 @@ describe('GetProductOrderController', () => {
             save(productOrder: ProductOrder): void {}
 
             updateStatus(productOrder: ProductOrder): void {}
+
+            delete(uuid: string): void {}
         }
 
         const productOrderRepository = new ProductOrderRepositoryMock();
@@ -115,6 +119,7 @@ describe('GetProductOrderController', () => {
             save(productOrder: ProductOrder): void {}
 
             updateStatus(productOrder: ProductOrder): void {}
+            delete(uuid: string): void {}
         }
 
         const productOrderRepository = new ProductOrderRepositoryMock();
