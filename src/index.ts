@@ -31,6 +31,8 @@ import { ListProductInputsUsecase } from "./usecases/ListProductInputsUsecase";
 import { ListProductInputsController } from "./controllers/ListProductInputsController";
 import { GetProductInputUsecase } from "./usecases/GetProductInputUsecase";
 import { GetProductInputController } from "./controllers/GetProductInputController";
+import { DeleteProductUseCase } from "./usecases/DeleteProductUseCase";
+import { DeleteProductController } from "./controllers/DeleteProductController";
 
 const sqliteConnection = new SqliteConnection("db/estoque.db");
 
@@ -61,6 +63,8 @@ const createProductOutputController = new CreateProductOutputController(createPr
 const listProductsController = new ListProductsController(listProductsUsecase);
 const deleteProductInputController = new DeleteProductInputController(deleteProductInputUseCase);
 const deleteProductOutputController = new DeleteProductOutputController(deleteProductOutputUseCase);
+const deleteProductUseCase = new DeleteProductUseCase(productRepository);
+const deleteProductController = new DeleteProductController(deleteProductUseCase);
 
 const listProductOrderController = new ListProductOrderController(listProductOrdersUsecase);
 const getProductOrderController = new GetProductOrderController(productOrderRepository);
@@ -91,11 +95,7 @@ app.delete("/product-inputs/:productInputId",deleteProductInputController.handle
 
 app.post("/product-outputs",createProductOutputController.handle.bind(createProductOutputController));
 app.delete("/product-outputs/:productOutputId",deleteProductOutputController.handle.bind(deleteProductOutputController));
-
-
-
-
-
+app.delete("/products/:barcode", deleteProductController.handle.bind(deleteProductController));
 
 app.listen({ port: 3000 }, (err, address) => {
   if (err) {

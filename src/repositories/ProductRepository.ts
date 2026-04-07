@@ -4,6 +4,7 @@ import { SqliteConnection } from "./SqliteConnection";
 export interface ProductRepositoryInterface {
     findByBarcode(barcode: string): Product | null;
     createProduct(product: Product): boolean;
+    delete(barcode: string): boolean;
     updateStock(barcode: string, newStock: number): void;
     listAll(): Product[];
 }
@@ -47,6 +48,14 @@ export class ProductRepository implements ProductRepositoryInterface {
         return resultado;
     }
 
+    public delete(barcode: string): boolean {
+        const connection = this.sqliteConnection.getConnection();
+        const statement = connection.prepare("DELETE FROM products WHERE barcode = ?");
+        const result = statement.run(barcode);
+
+        return result.changes > 0;
+    }
+
     public listAll(): Product[] {
         const connection = this.sqliteConnection.getConnection();
         const statement = connection.prepare("SELECT * FROM products");
@@ -71,5 +80,5 @@ export class ProductRepository implements ProductRepositoryInterface {
         const connection = this.sqliteConnection.getConnection();
         const statement = connection.prepare("UPDATE products SET quantity_in_stock = ? WHERE barcode = ?");
         statement.run(newStock, barcode);
-    }    
+    }
 }
