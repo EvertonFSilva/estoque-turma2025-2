@@ -31,6 +31,9 @@ import { ListProductInputsUsecase } from "./usecases/ListProductInputsUsecase";
 import { ListProductInputsController } from "./controllers/ListProductInputsController";
 import { GetProductInputUsecase } from "./usecases/GetProductInputUsecase";
 import { GetProductInputController } from "./controllers/GetProductInputController";
+import { ListProductOutputsUsecase } from "./usecases/ListProductOutputUsecase";
+import { ListProductOutputController } from "./controllers/ListProductOutputController";
+import { GetProductOutputController } from "./controllers/GetProductOutputController";
 
 const sqliteConnection = new SqliteConnection("db/estoque.db");
 
@@ -51,6 +54,7 @@ const listProductsUsecase = new ListProductsUsecase(productRepository);
 const listProductOrdersUsecase = new ListProductOrdersUsecase(productOrderRepository);
 const listProductInputsUsecase = new ListProductInputsUsecase(productInputRepository);
 const getProductInputUsecase = new GetProductInputUsecase(productInputRepository);
+const listProductOutputsUsecase = new ListProductOutputsUsecase(productOutputRepository);
 
 
 const createProductController = new CreateProductController(createProductUsecase);
@@ -67,6 +71,8 @@ const getProductOrderController = new GetProductOrderController(productOrderRepo
 const deleteProductOrderController = new DeleteProductOrderController(deleteProducOrderUseCase);
 const listProductInputsController = new ListProductInputsController(listProductInputsUsecase);
 const getProductInputController = new GetProductInputController(getProductInputUsecase);
+const listProductOutputsController = new ListProductOutputController(listProductOutputsUsecase);
+const getProductOutputController = new GetProductOutputController(productOutputRepository);
 
 const app = fastify();
 
@@ -90,6 +96,8 @@ app.get("/product-inputs/:productInputId",getProductInputController.handle.bind(
 app.delete("/product-inputs/:productInputId",deleteProductInputController.handle.bind(deleteProductInputController));
 
 app.post("/product-outputs",createProductOutputController.handle.bind(createProductOutputController));
+app.get("/product-outputs/:productOutputId",getProductOutputController.handle.bind(getProductOutputController));
+app.get("/product-outputs",listProductOutputsController.handle.bind(listProductOutputsController));
 app.delete("/product-outputs/:productOutputId",deleteProductOutputController.handle.bind(deleteProductOutputController));
 
 
